@@ -1,0 +1,270 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: black;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* 전체 스크롤바 스타일 */
+::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: gray;
+    border-radius: 10px;
+    &:active {
+      background: darkgray;
+    }
+  }
+  
+  .App {
+    text-align: center;
+    &-header {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: calc(10px + 2vmin);
+    }
+  }
+  
+  .mapContainer {
+    width: 100vw;
+    height: 100vh;
+  }
+  
+  .version {
+    position: absolute;
+    bottom: 3%;
+    right: 2.5%;
+    z-index: 444;
+    font-size: 12px;
+    color: #ffffff;
+  }
+  
+  .info {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 400px;
+    height: 100vh;
+    z-index: 999;
+    border-radius: 0 15px 15px 0;
+    background-color: #f1f1f1;
+    transition: all 0.5s;
+    &.closed { transform: translateX(-100%); }
+    &.open { transform: translateX(0); }
+  }
+  
+  .infoToggle {
+    width: 25px;
+    height: 50px;
+    position: absolute;
+    top: 50px;
+    left: 400px;
+    background-color: #000;
+    border-radius: 0 10px 10px 0;
+    z-index: 999;
+    &:hover { background-color: #484848; }
+    img { color: #ffc800; }
+  }
+  
+  .search {
+    width: 100%;
+    height: auto;
+    padding-top: 15px;
+    input {
+      width: 90%;
+      height: 40px;
+      border-radius: 20px;
+      font-size: 20px;
+      text-align: center;
+      background-color: #e6e4e4;
+      border: 1px solid #c6c6c6;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      width: 90%;
+      margin: 10px auto;
+      li {
+        margin-bottom: 10px;
+        button {
+          width: 100%;
+          height: 50px;
+          border-radius: 30px;
+          background-color: #e6e4e4;
+          border: 1px solid #c6c6c6;
+          text-align: left;
+          padding-left: 20px;
+          &:hover { background-color: #cfcfcf; }
+        }
+      }
+    }
+  }
+  
+  .tourList {
+    width: 100%;
+    height: calc(100vh - 150px);
+    overflow-y: auto;
+    .nearSpot {
+      padding: 10px 20px;
+      font-size: 15px;
+      text-align: left;
+    }
+    ul {
+      padding-left: 20px;
+      li {
+        margin-bottom: 20px;
+        font-size: 14px;
+        cursor: pointer;
+        &:hover { transform: translateX(10px); transition: 0.2s ease-in-out; }
+      }
+    }
+  }
+  
+  .tourList > ul > li > strong {
+    font-size: 20px;
+    color: #000000;
+  }
+  
+  .chatBot {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 100vh;
+    z-index: 999;
+    border-radius: 15px 0 0 15px;
+    background-color: #000000d4;
+    transition: all 0.5s;
+    &.closed { transform: translateX(100%); }
+    &.open { transform: translateX(0); }
+  }
+  
+  .chatBotToggle {
+    width: 25px;
+    height: 50px;
+    position: absolute;
+    top: 50px;
+    right: 400px;
+    background-color: #000;
+    border-radius: 5px 0 0 5px;
+    &:hover { background-color: #484848; }
+  }
+  
+  .chat-container {
+    width: 100%;
+    height: 100%;
+    background-color: #f1f1f1;
+    border-radius: 15px 0 0 15px;
+    .chat-window {
+      width: 100%;
+      height: 85%;
+      overflow-y: auto;
+      .question, .answer {
+        margin: 10px;
+        padding: 10px;
+        border-radius: 10px;
+        font-size: 16px;
+        background-color: #e6e4e4;
+        border: 1px solid #000;
+      }
+      .question {
+        text-align: right;
+        float: right;
+        max-width: 70%;
+      }
+      .answer {
+        text-align: left;
+        float: left;
+        max-width: 80%;
+      }
+    }
+    .chat-input {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 15%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      textarea {
+        width: 70%;
+        height: 40px;
+        border-radius: 20px 0 0 20px;
+        font-size: 16px;
+        padding: 0 20px;
+        border: 1px solid #c6c6c6;
+        background-color: #e6e4e4;
+      }
+      button {
+        width: 50px;
+        height: 40px;
+        font-size: 16px;
+        color: #fece00;
+        border-radius: 0 20px 20px 0;
+        background-color: #000;
+        &:hover { background-color: #303030; }
+      }
+    }
+  }
+  
+  .search ul > li > strong {
+    font-size: 15px;
+    color: #000000;
+  }
+  
+  .chat-window .answer:first-child {
+    margin-top: 25px;
+  }
+  
+  @media (max-width: 480px) {
+    .info {
+      width: 100%;
+      height: 90%;
+      bottom: 0;
+      top: auto;
+      border-radius: 15px 15px 0 0;
+      &.closed { transform: translateY(100%); }
+      &.open { transform: translateY(0); }
+      .infoToggle {
+        top: -25px;
+        left: 50%;
+        width: 50px;
+        height: 25px;
+        transform: translateX(-50%);
+        border-radius: 5px 5px 0 0;
+        img { transform: rotate(-90deg) translateX(12.5px); }
+      }
+    }
+    .chatBot {
+      width: calc(100% - 30px);
+      .chatBotToggle { left: -25px; }
+    }
+  } 

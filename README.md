@@ -1,36 +1,38 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ⛰️ Safe Hiking Tour
 
-## Getting Started
+[![사이트 미리보기](readme-images/link.png)](https://safe-hiking-tour.vercel.app)
 
-First, run the development server:
 
-```bash
+
+등산 위험지역 웹 지도 서비스입니다.
+
+등산 위험지역, 대피소, 봉우리 위치 정보와 주변 관광지 정보를 웹 지도를 통해 살펴볼 수 있고, 등산 챗봇을 통해 등산 관련 정보를 빠르게 찾아볼 수 있습니다.
+
+## 📆 프로젝트 기간
+- **초기 개발:** 2024.6 - 2020.9 (React.js 기반)
+- **업그레이드:** 2025.4 - 2025.5 (Next.js로 변경)
+
+## 👨‍💻 역할
+- 1인 개발 (Full-Stack Development)
+
+## 🛠️ 사용 기술
+- **Full-Stack**: React.js → Next.js (2025년 변경)
+- **API**: Kakao map API, 국문 관광정보 서비스 API, Gemini API, 한국등산트레킹지원센터 API(Python으로 전처리 후 사용)
+
+## 🚀 섹션별 설명
+- **카카오 맵**: 등산 위험지역, 대피소, 봉우리의 위치정보를 지도를 통해 표출. 위치 검색 시, 해당 위치 표출.
+<img src="readme-images/kakao-map.png" alt="Sate Hiking Tour 미리보기" width="600px">
+
+
+## 📌 설치 및 실행 방법
+```sh
+# 1. 프로젝트 클론
+git clone https://github.com/moonjiuk/to-the-moon.git
+cd to-the-moon
+
+# 2. 패키지 설치
+npm install
+
+# 3. 개발 서버 실행
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

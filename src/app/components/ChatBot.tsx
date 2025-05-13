@@ -8,9 +8,9 @@ type ChatEntry = {
 type ChatBotProps = {
   chatHistory: ChatEntry[];
   question: string;
-  onQuestionChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onQuestionChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSendQuestion: () => void;
-  onKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   loading: boolean;
 };
 
@@ -26,7 +26,7 @@ const ChatBot: React.FC<ChatBotProps> = ({ chatHistory, question, onQuestionChan
         ))}
       </div>
       <div className='chat-input'>
-        <textarea value={question} onChange={onQuestionChange} onKeyDown={onKeyDown} placeholder="등산관련 질문 입력" />
+        <input type='text' value={question} onChange={onQuestionChange} onKeyDown={onKeyDown} placeholder="등산관련 질문 입력" />
         <button onClick={onSendQuestion} disabled={loading}>{loading ? '...' : '질문'}</button>
       </div>
     </div>

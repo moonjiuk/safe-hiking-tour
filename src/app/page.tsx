@@ -1,22 +1,30 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
-import Head from "next/head";
-import Image from "next/image";
 import "./global.scss";
+
+// 라이브러리
+import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import { marked } from "marked";
+import axios from "axios";
+
+// 이미지 파일
 import PeakMarker from "../../public/Image/peak_marker.png";
 import DangerousMarker from "../../public/Image/dangerous_marker.png";
 import ShelterMarker from "../../public/Image/shelter_marker.png";
 import MeMarker from "../../public/Image/me_marker.png";
 import ChevronLeft from "../../public/Image/chevron-left.svg";
 import ChevronRight from "../../public/Image/chevron-right.svg";
+
+// 데이터 파일  
 import HikingRiskAreas from "../../public/Data/hikingRiskAreas.json";
 import MountainPeaks from "../../public/Data/mountainPeaks.json";
-import { marked } from "marked";
-import axios from "axios";
+
+// 컴포넌트
 import SearchBar from "./components/SearchBar";
 import TourList from "./components/TourList";
 import ChatBot from "./components/ChatBot";
 
+// 키
 const kakaoApiKey = process.env.NEXT_PUBLIC_KAKAO_API_KEY;
 const tourismApiKey = process.env.NEXT_PUBLIC_TOURISM_API_KEY;
 const geminiApiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
@@ -202,7 +210,7 @@ export default function Home() {
     handleInputChange({ target: { value: spot.addr1 } } as React.ChangeEvent<HTMLInputElement>);
   };
 
-  const handleQuestionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => setQuestion(e.target.value);
+  const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => setQuestion(e.target.value);
 
   const handleSendQuestion = async () => {
     if (!question.trim() || loading) return;
@@ -232,7 +240,7 @@ export default function Home() {
     setLoading(false);
   };
 
-  const handleKeyDown = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       await handleSendQuestion();
@@ -241,43 +249,38 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>안전산행투어</title>
-        <meta name="description" content="등산 위험지역과 대피소 정보를 알려주는 지도" />
-      </Head>
-      <div className="App">
-        <div className="mapContainer" ref={mapContainer} />
-        <div className="version">v.0.2</div>
-        <div className={`info ${isSidebarOpen ? "open" : "closed"}`}>
-          <div className="infoToggle" onClick={toggleSidebar}>
-            <Image src={isSidebarOpen ? "/Image/chevron-left.svg" : "/Image/chevron-right.svg"} alt="Toggle Sidebar" width={25} height={50} />
-          </div>
-          <SearchBar
-            inputText={inputText}
-            onInputChange={handleInputChange}
-            places={places}
-            onPlaceSelect={handlePlaceSelect}
-            searchContainerRef={searchContainerRef}
-          />
-          <TourList
-            selectedLocationName={selectedLocationName}
-            tourismSpots={tourismSpots}
-            onTouristSpotClick={handleTouristSpotClick}
-          />
+      <div className="mapContainer" ref={mapContainer} />
+
+      <div className={`info ${isSidebarOpen ? "open" : "closed"}`}>
+        <div className="infoToggle" onClick={toggleSidebar}>
+          <Image src={isSidebarOpen ? "/Image/chevron-left.svg" : "/Image/chevron-right.svg"} alt="Toggle Sidebar" width={25} height={50} />
         </div>
-        <div className={`chatBot ${isSidebarOpen2 ? "open" : "closed"}`}>
-          <div className="chatBotToggle" onClick={toggleSidebar2}>
-            <Image src={isSidebarOpen2 ? "/Image/chevron-right.svg" : "/Image/chevron-left.svg"} alt="Toggle Chatbot" width={25} height={50} />
-          </div>
-          <ChatBot
-            chatHistory={chatHistory}
-            question={question}
-            onQuestionChange={handleQuestionChange}
-            onSendQuestion={handleSendQuestion}
-            onKeyDown={handleKeyDown}
-            loading={loading}
-          />
+        <SearchBar
+          inputText={inputText}
+          onInputChange={handleInputChange}
+          places={places}
+          onPlaceSelect={handlePlaceSelect}
+          searchContainerRef={searchContainerRef}
+        />
+        <TourList
+          selectedLocationName={selectedLocationName}
+          tourismSpots={tourismSpots}
+          onTouristSpotClick={handleTouristSpotClick}
+        />
+      </div>
+
+      <div className={`chatBot ${isSidebarOpen2 ? "open" : "closed"}`}>
+        <div className="chatBotToggle" onClick={toggleSidebar2}>
+          <Image src={isSidebarOpen2 ? "/Image/chevron-right.svg" : "/Image/chevron-left.svg"} alt="Toggle Chatbot" width={25} height={50} />
         </div>
+        <ChatBot
+          chatHistory={chatHistory}
+          question={question}
+          onQuestionChange={handleQuestionChange}
+          onSendQuestion={handleSendQuestion}
+          onKeyDown={handleKeyDown}
+          loading={loading}
+        />
       </div>
     </>
   );

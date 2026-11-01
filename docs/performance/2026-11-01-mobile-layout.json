@@ -1,0 +1,856 @@
+{
+  "metadata": {
+    "date": "2026-11-01",
+    "baselineCommit": "e9f0eefcc5a27e6a10c33cb947cce421d7412683",
+    "currentSourceSha256": "9661421e3b0c54252e7dc87889a6863a6f2be7be4f399626192cc1c32335c4bf",
+    "datasetSha256": "7be9640cf1e628511536101e64877d7ec9d72936b01c657fb810eba777654802",
+    "count": 4870,
+    "method": "Baseline recreates the marker effect in the baseline commit; after is the extracted current effect with counters only. Same current dataset and one SDK/map instance; excludes SDK download and initial tiles.",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36",
+    "mapWidth": 375,
+    "mapHeight": 600,
+    "rounds": 5,
+    "longTasksSupported": true,
+    "completedAt": "2026-11-01T11:57:49.746Z",
+    "note": "Two rAF boundaries measure next-paint proxy, not field INP. Long task window includes setup, two pans and four zooms. Sequential cached-tile SDK test, no CPU/network throttling."
+  },
+  "summary": {
+    "before": {
+      "setupMsMedian": 596.5,
+      "setupToPaintMsMedian": 698.1000000238419,
+      "initialMarkersMedian": 4870,
+      "initialDomMarkerImagesMedian": 4870,
+      "panToPaintMsMedian": 23.150000035762787,
+      "zoomToPaintMsMedian": 47.1499999165535,
+      "zoomToPaintMsP95": 57.699999928474426,
+      "panCallMsMedian": 17.349999964237213,
+      "zoomCallMsMedian": 13.350000023841858,
+      "longTaskCountTotal": 5,
+      "blockingMsTotal": 2984,
+      "maxCachedMarkers": 4870,
+      "peakDomMarkerImages": 4870
+    },
+    "after": {
+      "setupMsMedian": 5.099999904632568,
+      "setupToPaintMsMedian": 7.100000023841858,
+      "initialMarkersMedian": 10,
+      "initialDomMarkerImagesMedian": 2,
+      "panToPaintMsMedian": 6.650000035762787,
+      "zoomToPaintMsMedian": 13,
+      "zoomToPaintMsP95": 54.300000071525574,
+      "panCallMsMedian": 1.800000011920929,
+      "zoomCallMsMedian": 9.049999952316284,
+      "longTaskCountTotal": 2,
+      "blockingMsTotal": 7,
+      "maxCachedMarkers": 329,
+      "peakDomMarkerImages": 3
+    }
+  },
+  "runs": [
+    {
+      "variant": "before",
+      "round": 0,
+      "setupMs": 616.6999999284744,
+      "setupToPaintMs": 737.5999999046326,
+      "initial": {
+        "created": 4870,
+        "cached": 4870,
+        "visible": 4870,
+        "markerImages": 4870
+      },
+      "operations": [
+        {
+          "kind": "pan",
+          "callMs": 18,
+          "toPaintMs": 21.799999952316284,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "pan",
+          "callMs": 16.700000047683716,
+          "toPaintMs": 22.5,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 20.600000023841858,
+          "toPaintMs": 57.699999928474426,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 14.5,
+          "toPaintMs": 45.89999997615814,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 13.300000071525574,
+          "toPaintMs": 47.800000071525574,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 12.399999976158142,
+          "toPaintMs": 40.89999997615814,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        }
+      ],
+      "coordinateChecks": 4870,
+      "updates": [],
+      "longTasks": [
+        {
+          "start": 68163.5,
+          "duration": 675
+        }
+      ],
+      "longTaskCount": 1,
+      "longTaskBlockingMs": 625
+    },
+    {
+      "variant": "after",
+      "round": 0,
+      "setupMs": 5.200000047683716,
+      "setupToPaintMs": 6.900000095367432,
+      "initial": {
+        "created": 10,
+        "cached": 10,
+        "visible": 10,
+        "markerImages": 2
+      },
+      "operations": [
+        {
+          "kind": "pan",
+          "callMs": 2.200000047683716,
+          "toPaintMs": 5.200000047683716,
+          "cached": 10,
+          "created": 10,
+          "visible": 10,
+          "markerImages": 2
+        },
+        {
+          "kind": "pan",
+          "callMs": 1.7999999523162842,
+          "toPaintMs": 7.699999928474426,
+          "cached": 10,
+          "created": 10,
+          "visible": 10,
+          "markerImages": 2
+        },
+        {
+          "kind": "zoom",
+          "callMs": 9.600000023841858,
+          "toPaintMs": 13,
+          "cached": 39,
+          "created": 39,
+          "visible": 39,
+          "markerImages": 3
+        },
+        {
+          "kind": "zoom",
+          "callMs": 45.90000009536743,
+          "toPaintMs": 49.10000002384186,
+          "cached": 329,
+          "created": 329,
+          "visible": 329,
+          "markerImages": 3
+        },
+        {
+          "kind": "zoom",
+          "callMs": 7.200000047683716,
+          "toPaintMs": 12.600000023841858,
+          "cached": 329,
+          "created": 329,
+          "visible": 39,
+          "markerImages": 3
+        },
+        {
+          "kind": "zoom",
+          "callMs": 3.899999976158142,
+          "toPaintMs": 10.5,
+          "cached": 329,
+          "created": 329,
+          "visible": 10,
+          "markerImages": 2
+        }
+      ],
+      "coordinateChecks": 34090,
+      "updates": [
+        4.899999976158142,
+        0.8000000715255737,
+        0.19999992847442627,
+        5.200000047683716,
+        38.90000009536743,
+        3.4000000953674316,
+        1.100000023841858
+      ],
+      "longTasks": [],
+      "longTaskCount": 0,
+      "longTaskBlockingMs": 0
+    },
+    {
+      "variant": "after",
+      "round": 1,
+      "setupMs": 4.600000023841858,
+      "setupToPaintMs": 7.200000047683716,
+      "initial": {
+        "created": 10,
+        "cached": 10,
+        "visible": 10,
+        "markerImages": 2
+      },
+      "operations": [
+        {
+          "kind": "pan",
+          "callMs": 1.8000000715255737,
+          "toPaintMs": 6.200000047683716,
+          "cached": 10,
+          "created": 10,
+          "visible": 10,
+          "markerImages": 2
+        },
+        {
+          "kind": "pan",
+          "callMs": 2.4000000953674316,
+          "toPaintMs": 7.800000071525574,
+          "cached": 10,
+          "created": 10,
+          "visible": 10,
+          "markerImages": 2
+        },
+        {
+          "kind": "zoom",
+          "callMs": 8.899999976158142,
+          "toPaintMs": 12.200000047683716,
+          "cached": 39,
+          "created": 39,
+          "visible": 39,
+          "markerImages": 3
+        },
+        {
+          "kind": "zoom",
+          "callMs": 47.799999952316284,
+          "toPaintMs": 51.59999990463257,
+          "cached": 329,
+          "created": 329,
+          "visible": 329,
+          "markerImages": 3
+        },
+        {
+          "kind": "zoom",
+          "callMs": 9.800000071525574,
+          "toPaintMs": 14,
+          "cached": 329,
+          "created": 329,
+          "visible": 39,
+          "markerImages": 3
+        },
+        {
+          "kind": "zoom",
+          "callMs": 6.299999952316284,
+          "toPaintMs": 13.100000023841858,
+          "cached": 329,
+          "created": 329,
+          "visible": 10,
+          "markerImages": 2
+        }
+      ],
+      "coordinateChecks": 34090,
+      "updates": [
+        4.299999952316284,
+        0.20000004768371582,
+        0.30000007152557373,
+        4.799999952316284,
+        39.700000047683716,
+        4.900000095367432,
+        1.399999976158142
+      ],
+      "longTasks": [],
+      "longTaskCount": 0,
+      "longTaskBlockingMs": 0
+    },
+    {
+      "variant": "before",
+      "round": 1,
+      "setupMs": 600.3999999761581,
+      "setupToPaintMs": 698.1000000238419,
+      "initial": {
+        "created": 4870,
+        "cached": 4870,
+        "visible": 4870,
+        "markerImages": 4870
+      },
+      "operations": [
+        {
+          "kind": "pan",
+          "callMs": 11.900000095367432,
+          "toPaintMs": 17.40000009536743,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "pan",
+          "callMs": 11.399999976158142,
+          "toPaintMs": 19.800000071525574,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 12.899999976158142,
+          "toPaintMs": 45,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 12.600000023841858,
+          "toPaintMs": 43.5,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 13.199999928474426,
+          "toPaintMs": 47.09999990463257,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 12.199999928474426,
+          "toPaintMs": 44.60000002384186,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        }
+      ],
+      "coordinateChecks": 4870,
+      "updates": [],
+      "longTasks": [
+        {
+          "start": 73993.69999992847,
+          "duration": 645
+        }
+      ],
+      "longTaskCount": 1,
+      "longTaskBlockingMs": 595
+    },
+    {
+      "variant": "before",
+      "round": 2,
+      "setupMs": 588.3000000715256,
+      "setupToPaintMs": 687.8999999761581,
+      "initial": {
+        "created": 4870,
+        "cached": 4870,
+        "visible": 4870,
+        "markerImages": 4870
+      },
+      "operations": [
+        {
+          "kind": "pan",
+          "callMs": 18.5,
+          "toPaintMs": 22.200000047683716,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "pan",
+          "callMs": 18.699999928474426,
+          "toPaintMs": 25.100000023841858,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 13.200000047683716,
+          "toPaintMs": 47.5,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 13.900000095367432,
+          "toPaintMs": 43.5,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 13.5,
+          "toPaintMs": 47.199999928474426,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 12.899999976158142,
+          "toPaintMs": 43,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        }
+      ],
+      "coordinateChecks": 4870,
+      "updates": [],
+      "longTasks": [
+        {
+          "start": 76846.19999992847,
+          "duration": 634
+        }
+      ],
+      "longTaskCount": 1,
+      "longTaskBlockingMs": 584
+    },
+    {
+      "variant": "after",
+      "round": 2,
+      "setupMs": 5.099999904632568,
+      "setupToPaintMs": 6.899999976158142,
+      "initial": {
+        "created": 10,
+        "cached": 10,
+        "visible": 10,
+        "markerImages": 2
+      },
+      "operations": [
+        {
+          "kind": "pan",
+          "callMs": 0.5,
+          "toPaintMs": 4.700000047683716,
+          "cached": 10,
+          "created": 10,
+          "visible": 10,
+          "markerImages": 2
+        },
+        {
+          "kind": "pan",
+          "callMs": 0.8000000715255737,
+          "toPaintMs": 3.899999976158142,
+          "cached": 10,
+          "created": 10,
+          "visible": 10,
+          "markerImages": 2
+        },
+        {
+          "kind": "zoom",
+          "callMs": 8.399999976158142,
+          "toPaintMs": 11.399999976158142,
+          "cached": 39,
+          "created": 39,
+          "visible": 39,
+          "markerImages": 3
+        },
+        {
+          "kind": "zoom",
+          "callMs": 48.300000071525574,
+          "toPaintMs": 51.90000009536743,
+          "cached": 329,
+          "created": 329,
+          "visible": 329,
+          "markerImages": 3
+        },
+        {
+          "kind": "zoom",
+          "callMs": 9.800000071525574,
+          "toPaintMs": 12,
+          "cached": 329,
+          "created": 329,
+          "visible": 39,
+          "markerImages": 3
+        },
+        {
+          "kind": "zoom",
+          "callMs": 6.700000047683716,
+          "toPaintMs": 9.700000047683716,
+          "cached": 329,
+          "created": 329,
+          "visible": 10,
+          "markerImages": 2
+        }
+      ],
+      "coordinateChecks": 34090,
+      "updates": [
+        4.799999952316284,
+        0,
+        0.10000002384185791,
+        4.600000023841858,
+        40.300000071525574,
+        4.800000071525574,
+        1.8000000715255737
+      ],
+      "longTasks": [],
+      "longTaskCount": 0,
+      "longTaskBlockingMs": 0
+    },
+    {
+      "variant": "after",
+      "round": 3,
+      "setupMs": 5.599999904632568,
+      "setupToPaintMs": 8.399999976158142,
+      "initial": {
+        "created": 10,
+        "cached": 10,
+        "visible": 10,
+        "markerImages": 2
+      },
+      "operations": [
+        {
+          "kind": "pan",
+          "callMs": 2.5,
+          "toPaintMs": 7.400000095367432,
+          "cached": 10,
+          "created": 10,
+          "visible": 10,
+          "markerImages": 2
+        },
+        {
+          "kind": "pan",
+          "callMs": 2,
+          "toPaintMs": 7.100000023841858,
+          "cached": 10,
+          "created": 10,
+          "visible": 10,
+          "markerImages": 2
+        },
+        {
+          "kind": "zoom",
+          "callMs": 10,
+          "toPaintMs": 13,
+          "cached": 39,
+          "created": 39,
+          "visible": 39,
+          "markerImages": 3
+        },
+        {
+          "kind": "zoom",
+          "callMs": 46.39999997615814,
+          "toPaintMs": 54.300000071525574,
+          "cached": 329,
+          "created": 329,
+          "visible": 329,
+          "markerImages": 3
+        },
+        {
+          "kind": "zoom",
+          "callMs": 8.299999952316284,
+          "toPaintMs": 14.399999976158142,
+          "cached": 329,
+          "created": 329,
+          "visible": 39,
+          "markerImages": 3
+        },
+        {
+          "kind": "zoom",
+          "callMs": 4.900000095367432,
+          "toPaintMs": 10.300000071525574,
+          "cached": 329,
+          "created": 329,
+          "visible": 10,
+          "markerImages": 2
+        }
+      ],
+      "coordinateChecks": 34090,
+      "updates": [
+        5.099999904632568,
+        0.2999999523162842,
+        0.19999992847442627,
+        4.900000095367432,
+        39.09999990463257,
+        4.200000047683716,
+        1.3000000715255737
+      ],
+      "longTasks": [
+        {
+          "start": 81768.5,
+          "duration": 52
+        }
+      ],
+      "longTaskCount": 1,
+      "longTaskBlockingMs": 2
+    },
+    {
+      "variant": "before",
+      "round": 3,
+      "setupMs": 596.5,
+      "setupToPaintMs": 700.6000000238419,
+      "initial": {
+        "created": 4870,
+        "cached": 4870,
+        "visible": 4870,
+        "markerImages": 4870
+      },
+      "operations": [
+        {
+          "kind": "pan",
+          "callMs": 17.799999952316284,
+          "toPaintMs": 25.600000023841858,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "pan",
+          "callMs": 17.90000009536743,
+          "toPaintMs": 26.600000023841858,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 19.299999952316284,
+          "toPaintMs": 53.799999952316284,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 14.599999904632568,
+          "toPaintMs": 52.09999990463257,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 15.400000095367432,
+          "toPaintMs": 49.300000071525574,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 12.599999904632568,
+          "toPaintMs": 43.799999952316284,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        }
+      ],
+      "coordinateChecks": 4870,
+      "updates": [],
+      "longTasks": [
+        {
+          "start": 82656.10000002384,
+          "duration": 645
+        }
+      ],
+      "longTaskCount": 1,
+      "longTaskBlockingMs": 595
+    },
+    {
+      "variant": "before",
+      "round": 4,
+      "setupMs": 590.8999999761581,
+      "setupToPaintMs": 689.7999999523163,
+      "initial": {
+        "created": 4870,
+        "cached": 4870,
+        "visible": 4870,
+        "markerImages": 4870
+      },
+      "operations": [
+        {
+          "kind": "pan",
+          "callMs": 15.5,
+          "toPaintMs": 23.800000071525574,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "pan",
+          "callMs": 16.899999976158142,
+          "toPaintMs": 24.200000047683716,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 19.200000047683716,
+          "toPaintMs": 56.200000047683716,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 16.600000023841858,
+          "toPaintMs": 58,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 13.399999976158142,
+          "toPaintMs": 47.39999997615814,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        },
+        {
+          "kind": "zoom",
+          "callMs": 13.100000023841858,
+          "toPaintMs": 46.10000002384186,
+          "cached": 4870,
+          "created": 4870,
+          "visible": 4870,
+          "markerImages": 4870
+        }
+      ],
+      "coordinateChecks": 4870,
+      "updates": [],
+      "longTasks": [
+        {
+          "start": 85550.5,
+          "duration": 635
+        }
+      ],
+      "longTaskCount": 1,
+      "longTaskBlockingMs": 585
+    },
+    {
+      "variant": "after",
+      "round": 4,
+      "setupMs": 4.400000095367432,
+      "setupToPaintMs": 7.100000023841858,
+      "initial": {
+        "created": 10,
+        "cached": 10,
+        "visible": 10,
+        "markerImages": 2
+      },
+      "operations": [
+        {
+          "kind": "pan",
+          "callMs": 1.5,
+          "toPaintMs": 6,
+          "cached": 10,
+          "created": 10,
+          "visible": 10,
+          "markerImages": 2
+        },
+        {
+          "kind": "pan",
+          "callMs": 1.5,
+          "toPaintMs": 7.100000023841858,
+          "cached": 10,
+          "created": 10,
+          "visible": 10,
+          "markerImages": 2
+        },
+        {
+          "kind": "zoom",
+          "callMs": 8.699999928474426,
+          "toPaintMs": 12.5,
+          "cached": 39,
+          "created": 39,
+          "visible": 39,
+          "markerImages": 3
+        },
+        {
+          "kind": "zoom",
+          "callMs": 49,
+          "toPaintMs": 57.10000002384186,
+          "cached": 329,
+          "created": 329,
+          "visible": 329,
+          "markerImages": 3
+        },
+        {
+          "kind": "zoom",
+          "callMs": 9.199999928474426,
+          "toPaintMs": 14,
+          "cached": 329,
+          "created": 329,
+          "visible": 39,
+          "markerImages": 3
+        },
+        {
+          "kind": "zoom",
+          "callMs": 5.200000047683716,
+          "toPaintMs": 10.5,
+          "cached": 329,
+          "created": 329,
+          "visible": 10,
+          "markerImages": 2
+        }
+      ],
+      "coordinateChecks": 34090,
+      "updates": [
+        4.200000047683716,
+        0.19999992847442627,
+        0.2999999523162842,
+        4.799999952316284,
+        40.199999928474426,
+        4.399999976158142,
+        1.5
+      ],
+      "longTasks": [
+        {
+          "start": 88979.69999992847,
+          "duration": 55
+        }
+      ],
+      "longTaskCount": 1,
+      "longTaskBlockingMs": 5
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "source": "한국등산트레킹지원센터_전국주요봉우리 위험지역 POI 정보 서비스",
+  "sourceUrl": "https://www.data.go.kr/data/15108067/openapi.do",
+  "endpoint": "https://apis.data.go.kr/B553662/dangerInfoService/getDangerInfoList",
+  "retrievedAt": "2026-11-01T09:56:52.563Z",
+  "count": 3910,
+  "referenceDates": [
+    "2026-11-01 06:31:52"
+  ]
+}

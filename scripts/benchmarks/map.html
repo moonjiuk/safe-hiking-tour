@@ -1,0 +1,69 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><title>등산 위험정보 표출 성능 비교</title>
+<style>body{font:14px/1.6 Arial,sans-serif;margin:20px;background:#f6f8f5;color:#203b31}button,select{padding:10px 16px;margin:0 8px 12px 0}#map{width:1000px;height:600px;background:#e4ebe0}pre{white-space:pre-wrap;max-width:1050px}#status{font-weight:bold;margin:12px 0}</style>
+<h1>등산 위험정보 표출 로직 · 이전/이후 비교</h1>
+<p>기존 커밋의 전체 마커 생성 방식과 현재 표출 로직을 같은 데이터·SDK·지도에서 비교합니다. 실제 사용자 위치와 외부 AI API는 사용하지 않습니다.</p>
+<select id="size" aria-label="측정 화면"><option value="desktop">Desktop · 1000 × 600</option><option value="mobile">Mobile layout · 375 × 600</option></select>
+<button id="run" disabled>측정 시작</button><div id="status" role="status">지도 준비 중</div><div id="map"></div><pre id="summary"></pre><textarea id="results" aria-label="측정 원본 JSON" rows="5" cols="110" readonly></textarea>
+<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=__PUBLIC_KAKAO_KEY__&autoload=false&libraries=clusterer"></script>
+<script type="module">
+import {createAfter} from './after.js';
+const {places,metadata}=await (await fetch('./data.json')).json();
+const k=window.kakao.maps; await new Promise(resolve=>k.load(resolve));
+const map=new k.Map(document.getElementById('map'),{center:new k.LatLng(36.886124,128.105896),level:6});
+const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+const paint=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+const events=[];let observer;
+if(PerformanceObserver.supportedEntryTypes?.includes('longtask')){observer=new PerformanceObserver(list=>events.push(...list.getEntries().map(e=>({start:e.startTime,duration:e.duration}))));observer.observe({type:'longtask'});}
+// Faithful reproduction of HEAD page.tsx: one InfoWindow, 50px image per
+// marker, immediate map attachment, per-marker click listener, no clusterer.
+function createBefore(){
+ const stats={created:0,visible:places.length,cached:places.length,scans:places.length,updateMs:[]};const markers=[];
+ const info=new k.InfoWindow();
+ for(const p of places){
+  const marker=new k.Marker({map,position:new k.LatLng(p.lat,p.lng),title:p.name});
+  marker.setImage(new k.MarkerImage(`/Image/${p.category==='danger'?'dangerous':p.category}_marker.png`,new k.Size(50,50)));
+  const click=()=>{info.setContent(`<div>${p.name}</div>`);info.open(map,marker);};
+  k.event.addListener(marker,'click',click);markers.push({marker,click});stats.created++;
+ }
+ const close=()=>info.close();k.event.addListener(map,'click',close);
+ return {stats,cleanup(){for(const {marker,click} of markers){k.event.removeListener(marker,'click',click);marker.setMap(null);}k.event.removeListener(map,'click',close);info.close();}};
+}
+const median=a=>{a=[...a].sort((x,y)=>x-y);const m=(a.length-1)/2;return(a[Math.floor(m)]+a[Math.ceil(m)])/2;};
+const percentile=(a,p)=>[...a].sort((x,y)=>x-y)[Math.ceil(a.length*p)-1];
+const status=document.getElementById('status'),run=document.getElementById('run');
+await pause(1000);status.textContent='준비 완료 · 탭을 전면에 둔 채 측정해 주세요';run.disabled=false;
+run.onclick=async()=>{
+ run.disabled=true;document.getElementById('summary').textContent='';const size=document.getElementById('size').value;
+ document.getElementById('map').style.width=size==='mobile'?'375px':'1000px';map.relayout();
+ const runs=[];
+ try{
+  // Warm the same SDK, icons and tile path before timing either variant.
+  for(const p of ['peak','dangerous','shelter']){const img=new Image();img.src=`/Image/${p}_marker.png`;await img.decode();}
+  for(const level of [6,8,10,8,6]){map.setLevel(level);await pause(100);}
+  await pause(500);
+  for(let round=0;round<5;round++)for(const variant of round%2?['after','before']:['before','after']){
+   status.textContent=`${size} · ${round+1}/5 · ${variant}`;
+   map.setLevel(6);map.setCenter(new k.LatLng(36.886124,128.105896));await pause(180);
+   const started=performance.now();const layer=variant==='before'?createBefore():createAfter(places,map);const setupMs=performance.now()-started;
+   await paint();const setupToPaintMs=performance.now()-started;await pause(180);
+   const initial={created:layer.stats.created,cached:layer.stats.cached,visible:layer.stats.visible,markerImages:document.querySelectorAll('#map img[src*="_marker.png"]').length};
+   const operations=[];
+   const targets=[['pan',()=>map.setCenter(new k.LatLng(36.896124,128.115896))],['pan',()=>map.setCenter(new k.LatLng(36.886124,128.105896))],... [8,10,8,6].map(level=>['zoom',()=>map.setLevel(level)])];
+   for(const [kind,action] of targets){
+    const t=performance.now();action();const callMs=performance.now()-t;await paint();const toPaintMs=performance.now()-t;await pause(120);
+    operations.push({kind,callMs,toPaintMs,cached:layer.stats.cached,created:layer.stats.created,visible:layer.stats.visible,markerImages:document.querySelectorAll('#map img[src*="_marker.png"]').length});
+   }
+   const ended=performance.now();await pause(80);
+   const longTasks=events.filter(e=>e.start+e.duration>started&&e.start<ended);
+   runs.push({variant,round,setupMs,setupToPaintMs,initial,operations,coordinateChecks:layer.stats.scans,updates:layer.stats.updateMs,longTasks,longTaskCount:longTasks.length,longTaskBlockingMs:longTasks.reduce((sum,e)=>sum+Math.max(0,e.duration-50),0)});
+   layer.cleanup();await pause(180);
+  }
+  const summary=Object.fromEntries(['before','after'].map(variant=>{
+   const rs=runs.filter(r=>r.variant===variant),ops=kind=>rs.flatMap(r=>r.operations.filter(o=>o.kind===kind));
+   return [variant,{setupMsMedian:median(rs.map(r=>r.setupMs)),setupToPaintMsMedian:median(rs.map(r=>r.setupToPaintMs)),initialMarkersMedian:median(rs.map(r=>r.initial.created)),initialDomMarkerImagesMedian:median(rs.map(r=>r.initial.markerImages)),panToPaintMsMedian:median(ops('pan').map(o=>o.toPaintMs)),zoomToPaintMsMedian:median(ops('zoom').map(o=>o.toPaintMs)),zoomToPaintMsP95:percentile(ops('zoom').map(o=>o.toPaintMs),.95),longTaskCountTotal:rs.reduce((n,r)=>n+r.longTaskCount,0),blockingMsTotal:rs.reduce((n,r)=>n+r.longTaskBlockingMs,0),maxCachedMarkers:Math.max(...rs.flatMap(r=>r.operations.map(o=>o.cached))),peakDomMarkerImages:Math.max(...rs.flatMap(r=>r.operations.map(o=>o.markerImages)))}];
+  }));
+  const result={metadata:{...metadata,userAgent:navigator.userAgent,mapWidth:document.getElementById('map').clientWidth,mapHeight:600,rounds:5,longTasksSupported:!!observer,completedAt:new Date().toISOString(),note:'Two rAF boundaries measure next-paint proxy, not field INP. Long task window includes setup, two pans and four zooms. Sequential cached-tile SDK test, no CPU/network throttling.'},summary,runs};
+  document.getElementById('results').value=JSON.stringify(result,null,2);document.getElementById('summary').textContent=JSON.stringify(summary,null,2);status.textContent='측정 완료';
+ }catch(error){status.textContent=`측정 실패: ${error.message}`;console.error(error);}finally{run.disabled=false;}
+};
+</script></html>

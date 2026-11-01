@@ -4,6 +4,7 @@ import "./global.scss";
 export const metadata: Metadata = {
   title: "안전산행투어",
   description: "등산 위험지역과 대피소 정보를 알려주는 웹 지도 서비스 입니다.",
+  icons: { icon: [{ url: "/Image/logo.svg", type: "image/svg+xml" }] },
 };
 
 export default function RootLayout({
@@ -13,9 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

@@ -52,6 +52,7 @@ function HikingMap({
 }) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<any>(null);
+  const lastCenter = useRef({lat: 36.886124, lng: 128.105896});
   const locationMarker = useRef<any>(null);
   const locationRequest = useRef(0);
   const cancelLocation = useRef<(() => void) | undefined>(undefined);
@@ -106,16 +107,28 @@ function HikingMap({
   }, [stopFlight]);
   const [locating, setLocating] = useState(false);
   const [locationError, setLocationError] = useState("");
+  const [locationNotice, setLocationNotice] = useState(false);
+  const [locationSlow, setLocationSlow] = useState(false);
+  const [locationElapsed, setLocationElapsed] = useState<number | null>(null);
   const [locationDiagnostic, setLocationDiagnostic] = useState("");
   const [locationPermission, setLocationPermission] = useState("unknown");
   const [ready, setReady] = useState(false);
   const [error, setError] = useState("");
   const [attempt, setAttempt] = useState(0);
-  const locateMe = useCallback(() => {
+  useEffect(() => {
+    if (!locating || !locationNotice) return;
+    const timer = setTimeout(() => setLocationSlow(true), 2500);
+    return () => clearTimeout(timer);
+  }, [locating, locationNotice]);
+  const locateMe = useCallback((manual = false) => {
     const activeMap = map.current;
     if (!activeMap) return;
     cancelLocation.current?.();
     const requestId = ++locationRequest.current;
+    const started = performance.now();
+    setLocationNotice(manual);
+    setLocationSlow(false);
+    setLocationElapsed(null);
     setLocationError("");
     setLocationDiagnostic("");
     navigator.permissions?.query?.({name: "geolocation"}).then(permission => {
@@ -146,6 +159,8 @@ function HikingMap({
         moveTo(coords.latitude, coords.longitude, 5);
         setLocating(false);
         setLocationDiagnostic("success");
+        setLocationElapsed(Math.round(performance.now() - started));
+        setLocationNotice(false);
         setLocationPermission("granted");
       };
     const fail = (error: GeolocationPositionError) => {
@@ -153,13 +168,14 @@ function HikingMap({
           return;
         setLocating(false);
         setLocationDiagnostic(`${error.code}: ${error.message}`);
+        setLocationElapsed(Math.round(performance.now() - started));
         if (error.code === 1) setLocationPermission("denied");
         setLocationError(
           error.code === 1
-            ? "위치 권한이 꺼져 있습니다. 브라우저의 사이트 설정에서 위치 접근을 허용해 주세요."
+            ? "위치 접근이 차단되어 있습니다. 사이트 설정과 기기의 위치 서비스에서 브라우저를 허용해 주세요."
             : error.code === 3
-              ? "위치 확인 시간이 초과되었습니다. 다시 눌러 주세요."
-              : "현재 위치를 확인할 수 없습니다. 기기의 위치 서비스를 확인해 주세요.",
+              ? "8초 안에 위치를 받지 못했습니다. 기기의 위치 서비스를 확인하거나 Safari·Chrome에서 다시 시도해 주세요."
+              : "기기에서 위치를 받지 못했습니다. Wi-Fi·GPS와 위치 서비스가 켜져 있는지 확인해 주세요.",
         );
       };
     cancelLocation.current = requestLocation(navigator.geolocation, success, fail);
@@ -182,6 +198,7 @@ function HikingMap({
     loadSdk(key)
       .then(() => {
         if (cancelled || !container.current) return;
+        lastCenter.current = {lat: 36.886124, lng: 128.105896};
         map.current = new window.kakao.maps.Map(container.current, {
           center: new window.kakao.maps.LatLng(36.886124, 128.105896),
           level: 6,
@@ -205,10 +222,18 @@ function HikingMap({
   useEffect(() => {
     if (!ready || !container.current) return;
     const activeMap = map.current;
+    const k = window.kakao.maps;
+    const rememberCenter = () => {
+      const position = activeMap.getCenter();
+      lastCenter.current = {lat: position.getLat(), lng: position.getLng()};
+    };
+    k.event.addListener(activeMap, "center_changed", rememberCenter);
     const observer = new ResizeObserver(() => {
-      const center = activeMap.getCenter();
+      // getCenter() after the DOM has resized can already use the new dimensions
+      // against the old projection. Restore the last actual map center instead.
+      const {lat, lng} = lastCenter.current;
       activeMap.relayout();
-      activeMap.setCenter(center);
+      activeMap.setCenter(new k.LatLng(lat, lng));
     });
     const element = container.current;
     const interrupt = () => {
@@ -221,6 +246,7 @@ function HikingMap({
     observer.observe(container.current);
     return () => {
       observer.disconnect();
+      k.event.removeListener(activeMap, "center_changed", rememberCenter);
       element.removeEventListener('pointerdown', interrupt, true);
       element.removeEventListener('wheel', interrupt);
     };
@@ -326,10 +352,11 @@ function HikingMap({
       <div className="location-controls">
         <button
           className="locate-button"
-          onClick={locateMe}
+          onClick={() => locateMe(true)}
           disabled={!ready}
           aria-label="내 위치로 이동"
           data-location-result={locationDiagnostic}
+          data-location-elapsed-ms={locationElapsed ?? undefined}
           data-location-permission={locationPermission}
           title={locating ? "현재 위치 확인 중" : locationError || "내 위치로 이동"}
           aria-busy={locating}
@@ -348,7 +375,15 @@ function HikingMap({
             <path d="M12 2v4m0 12v4M2 12h4m12 0h4" />
           </svg>
         </button>
-
+        {locationNotice && (locating || locationError) && <div className="location-feedback" role="status">
+          <p>{locating ? locationSlow
+            ? locationPermission === "prompt"
+              ? "브라우저의 위치 접근 요청을 허용해 주세요. 요청이 보이지 않으면 Safari·Chrome에서 열어 주세요."
+              : "기기에서 위치를 확인하고 있습니다. 위치 서비스가 켜져 있는지 확인해 주세요."
+            : "현재 위치를 확인하고 있습니다."
+            : locationError}</p>
+          <button type="button" onClick={() => setLocationNotice(false)} aria-label="위치 안내 닫기">×</button>
+        </div>}
       </div>
       {error && (
         <div className="map-empty">

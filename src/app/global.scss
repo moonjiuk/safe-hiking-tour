@@ -603,7 +603,10 @@ h1 {
 @keyframes location-pulse { to { opacity: .35; } }
 @media (prefers-reduced-motion: reduce) { .locate-button[aria-busy="true"] svg { animation: none; } }
 .location-feedback {
+  width: min(270px, calc(100vw - 80px));
   max-width: 270px;
+  position: relative;
+  pointer-events: auto;
   margin: 0;
   padding: 12px;
   border-radius: 12px;
@@ -612,6 +615,8 @@ h1 {
   line-height: 1.6;
   box-shadow: 0 4px 16px #244e3a15;
 }
+.location-feedback p { margin: 0; padding-right: 18px; }
+.location-feedback button { position: absolute; top: 6px; right: 6px; width: 24px; height: 24px; font-size: 20px; }
 .location-feedback:empty {
   display: none;
 }
@@ -679,7 +684,7 @@ h1 {
 }
 @media (max-width: 600px) {
   .workspace {
-    --mobile-map-height: 38%;
+    --mobile-map-height: 50%;
     display: flex;
     flex-direction: column;
     height: 100dvh;
@@ -702,9 +707,18 @@ h1 {
   .panel-collapsed .sidebar {
     height: 0;
     padding-top: 0;
+    padding-bottom: 0;
     transform: none;
     transition: height 280ms cubic-bezier(.2,.7,.2,1), padding-top 280ms cubic-bezier(.2,.7,.2,1), opacity 180ms, visibility 0s 280ms;
   }
+  .sidebar:has(#places-view:not([hidden])) {
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    overflow-anchor: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  #places-view { flex: 0 0 auto; min-height: auto; }
+  #places-view .place-list { overflow: visible; flex: none; }
   .sidebar-brand { margin-bottom: 12px; font-size: 17px; }
   .sidebar-brand .brand-icon { font-size: 30px; }
   .sidebar-tabs { margin-bottom: 12px; }

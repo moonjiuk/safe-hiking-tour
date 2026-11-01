@@ -25,7 +25,8 @@ export default function HikingExplorer() {
     const saved = anchor.current;
     const list = listRef.current;
     if (!saved || !list) return;
-    const preserve = () => {if (saved.element.isConnected) list.scrollTop += saved.element.getBoundingClientRect().top - saved.top;};
+    const scroller = window.matchMedia("(max-width: 600px)").matches ? list.closest<HTMLElement>(".sidebar") || list : list;
+    const preserve = () => {if (saved.element.isConnected) scroller.scrollTop += saved.element.getBoundingClientRect().top - saved.top;};
     preserve();
     const observer = new ResizeObserver(preserve);
     list.querySelectorAll('.place-entry').forEach(element => observer.observe(element));

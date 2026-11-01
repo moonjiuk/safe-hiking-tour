@@ -3,6 +3,7 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import type { MapBounds, Tour } from "@/lib/map-types";
 import type { HikingPlace } from "@/lib/places";
+import { requestLocation } from "@/lib/geolocation";
 declare global {
   interface Window {
     kakao: any;
@@ -53,7 +54,7 @@ function HikingMap({
   const map = useRef<any>(null);
   const locationMarker = useRef<any>(null);
   const locationRequest = useRef(0);
-  const locationTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const cancelLocation = useRef<(() => void) | undefined>(undefined);
   const flight = useRef<number | null>(null);
   const stopFlight = useCallback(() => {
     if (flight.current !== null) cancelAnimationFrame(flight.current);
@@ -113,10 +114,11 @@ function HikingMap({
   const locateMe = useCallback(() => {
     const activeMap = map.current;
     if (!activeMap) return;
+    cancelLocation.current?.();
     const requestId = ++locationRequest.current;
     setLocationError("");
     setLocationDiagnostic("");
-    navigator.permissions?.query({name: "geolocation"}).then(permission => {
+    navigator.permissions?.query?.({name: "geolocation"}).then(permission => {
       if (requestId === locationRequest.current) setLocationPermission(permission.state);
     }).catch(() => {});
     if (!navigator.geolocation) {
@@ -124,19 +126,10 @@ function HikingMap({
       return;
     }
     setLocating(true);
-    clearTimeout(locationTimer.current);
-    locationTimer.current = setTimeout(() => {
-      if (requestId !== locationRequest.current || map.current !== activeMap) return;
-      locationRequest.current++;
-      setLocating(false);
-      setLocationError("위치를 확인하지 못했습니다. 위치 권한을 확인한 뒤 다시 눌러 주세요.");
-      setLocationDiagnostic("watchdog-timeout");
-    }, 22000);
     const success = ({coords}: GeolocationPosition) => {
         if (requestId !== locationRequest.current || map.current !== activeMap)
           return;
         const k = window.kakao.maps;
-        clearTimeout(locationTimer.current);
         const position = new k.LatLng(coords.latitude, coords.longitude);
         locationMarker.current?.setMap(null);
         const content = document.createElement("div");
@@ -158,7 +151,6 @@ function HikingMap({
     const fail = (error: GeolocationPositionError) => {
         if (requestId !== locationRequest.current || map.current !== activeMap)
           return;
-        clearTimeout(locationTimer.current);
         setLocating(false);
         setLocationDiagnostic(`${error.code}: ${error.message}`);
         if (error.code === 1) setLocationPermission("denied");
@@ -170,14 +162,13 @@ function HikingMap({
               : "현재 위치를 확인할 수 없습니다. 기기의 위치 서비스를 확인해 주세요.",
         );
       };
-    navigator.geolocation.getCurrentPosition(success, (error) => {
-      if (requestId !== locationRequest.current || map.current !== activeMap) return;
-      if (error.code === 1) return fail(error);
-      navigator.geolocation.getCurrentPosition(success, fail, {enableHighAccuracy: true, timeout: 12000, maximumAge: 300000});
-    }, {enableHighAccuracy: false, timeout: 8000, maximumAge: 300000});
+    cancelLocation.current = requestLocation(navigator.geolocation, success, fail);
   }, [moveTo]);
   useEffect(() => stopFlight, [stopFlight]);
-  useEffect(() => () => clearTimeout(locationTimer.current), []);
+  useEffect(() => () => {
+    locationRequest.current++;
+    cancelLocation.current?.();
+  }, []);
   useEffect(() => {
     let cancelled = false;
     const key = process.env.NEXT_PUBLIC_KAKAO_API_KEY;
@@ -336,7 +327,7 @@ function HikingMap({
         <button
           className="locate-button"
           onClick={locateMe}
-          disabled={!ready || locating}
+          disabled={!ready}
           aria-label="내 위치로 이동"
           data-location-result={locationDiagnostic}
           data-location-permission={locationPermission}
